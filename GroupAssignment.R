@@ -38,6 +38,22 @@ credit_ts %>%
   model(TSLM(ï..credit_in_millions ~ month)) %>%
   report()
 #Naive
+train <- credit_ts %>%
+  filter_index("1970 Feb" ~ "2011 Jan")
+# Fit the models
+credit_fit <- TrainingCredit %>%
+  model(
+    Mean = MEAN(credit_in_millions),
+    `Naïve` = NAIVE(credit_in_millions),
+    `Seasonal naïve` = SNAIVE(credit_in_millions)
+  )
+# Generate forecasts
+credit_fc <- credit_fit %>% forecast(h = 12)
+# Plot forecasts against actual values
+
+credit_fc %>%
+  autoplot(TrainingCredit, level = NULL)
+
 
 
 #Training
