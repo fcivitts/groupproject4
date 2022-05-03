@@ -59,3 +59,10 @@ credit_fc %>%
 #Training
 credit_ts <- credit_ts %>%filter(year(month) >= '1970 Feb')
 TrainingCredit <- credit_ts %>% filter(year(month) <= '2004 Jan')
+
+
+
+#ETS
+fit <- credit_ts %>%
+  model(ETS(credit_in_millions))
+report(fit)
