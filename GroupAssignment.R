@@ -1,3 +1,8 @@
+library(fpp3)
+library(regclass)
+library(stats)
+
+
 credit <- read.csv('credit (1).csv')
 
 credit$month <- 492:1
@@ -11,31 +16,33 @@ gg_season(credit_ts)
 
 #Arima
 fit <- credit_ts %>%
-  model(arima1 = ARIMA(√Ø..credit_in_millions ~ pdq(2,1,0)),
-        arima2 = ARIMA(√Ø..credit_in_millions ~pdq(0,1,3)),
-        arima3 = ARIMA(√Ø..credit_in_millions ~pdq(2,0,2)),
-        arima4 = ARIMA(√Ø..credit_in_millions ~pdq(1,2,1)),
-        arimastepwise = ARIMA(√Ø..credit_in_millions),
-        searching = ARIMA(√Ø..credit_in_millions, stepwise = FALSE))
+  model(arima1 = ARIMA(Ô..credit_in_millions ~ pdq(2,1,0)),
+        arima2 = ARIMA(Ô..credit_in_millions ~pdq(0,1,3)),
+        arima3 = ARIMA(Ô..credit_in_millions ~pdq(2,0,2)),
+        arimastepwise = ARIMA(Ô..credit_in_millions),
+        searching = ARIMA(Ô..credit_in_millions, stepwise = FALSE))
+
 
 glance(fit) %>% arrange(AICc)
 
-fit <- credit_ts %>% model(ARIMA())
+fit <- credit_ts %>% model(ARIMA(Ô..credit_in_millions, stepwise = FALSE))
 report(fit)
 
 fit %>% forecast(h=12) %>% autoplot(credit_ts)
-              
+predictions <- fit %>% forecast(h=12)
+predictions$.mean
+write.csv(predictions, file = "predictions.csv" )
 
 #Tslm
 credit_ts %>%
-  ggplot(aes(x = month, y = √Ø..credit_in_millions)) +
+  ggplot(aes(x = month, y = Ô..credit_in_millions)) +
   labs(y = "Credit in millions",
        x = "Month") +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)  
 
 credit_ts %>%
-  model(TSLM(√Ø..credit_in_millions ~ month)) %>%
+  model(TSLM(Ô..credit_in_millions ~ month)) %>%
   report()
 #Naive
 train <- credit_ts %>%
@@ -43,9 +50,9 @@ train <- credit_ts %>%
 # Fit the models
 credit_fit <- TrainingCredit %>%
   model(
-    Mean = MEAN(credit_in_millions),
-    `Na√Øve` = NAIVE(credit_in_millions),
-    `Seasonal na√Øve` = SNAIVE(credit_in_millions)
+    Mean = MEAN(Ô..credit_in_millions),
+    `Na√Øve` = NAIVE(Ô..credit_in_millions),
+    `Seasonal naÔve` = SNAIVE(Ô..credit_in_millions)
   )
 # Generate forecasts
 credit_fc <- credit_fit %>% forecast(h = 12)
@@ -64,7 +71,7 @@ TrainingCredit <- credit_ts %>% filter(year(month) <= '2004 Jan')
 
 #ETS
 fit <- credit_ts %>%
-  model(ETS(credit_in_millions))
+  model(ETS(Ô..credit_in_millions))
 report(fit)
 
 library(fpp3)
