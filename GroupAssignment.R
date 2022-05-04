@@ -66,3 +66,19 @@ TrainingCredit <- credit_ts %>% filter(year(month) <= '2004 Jan')
 fit <- credit_ts %>%
   model(ETS(credit_in_millions))
 report(fit)
+
+library(fpp3)
+credits$month <- 492:1
+credits$month<- yearmonth(credits$month, year = 3000L, month= 1L)
+credit_ts <- as_tsibble(credits)
+gg_season(credit_ts)
+
+credit_ts %>%  
+  model(
+    classical_decomposition(ï..credit_in_millions, type = "additive")
+  ) %>%
+  components() %>%
+  autoplot() +
+  labs(title = "Classical additive decomposition of credits")
+
+
